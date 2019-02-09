@@ -5,7 +5,7 @@ const config = {
   channelAccessToken: 'AZR5h8iAU8HouSJbyI+NsRoKfJhq7d03+yUq5V+5XXfcmjnbihdekyjESeGYPbQZTQMf60w2zWMG9mDgKCM3D/YStKY9fEExH+EbSH+IJFxdKgycerlFZaOsHrestkCQ1UmO+UgEjrJsH62giW8WjwdB04t89/1O/w1cDnyilFU=',
   channelSecret: '4cee74bf19bb7ef8d06d28592d0dcae8',
 };
-let baseURL = 'Callback เอามาจาก Heroku';
+let baseURL = 'https://joog.herokuapp.com/callback';
 const client = new line.Client(config);
 const app = express();
 app.post('/callback', line.middleware(config), (req, res) => {
@@ -34,7 +34,7 @@ const replyText = (token, texts) => {
 
 function handleEvent(event) {
   if (event.replyToken.match(/^(.)\1*$/)) {
-    return console.log(`Test hook recieved: ` + JSON.stringify(event.message));
+    return console.log("Test hook recieved: " + JSON.stringify(event.message));
   }
 
   switch (event.type) {
@@ -62,7 +62,7 @@ function handleEvent(event) {
       }
 
     case 'follow':
-      return replyText(event.replyToken, 'ขอบคุณที่เป็นเพื่อน');
+      return replyText(event.replyToken, 'Thanks For Add Me.');
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
@@ -89,15 +89,11 @@ function handleEvent(event) {
 }
 
 function handleMessage(message, replyToken) {
-  let msg = message.text; //ข้อความที่ส่งมา
-  let to = replyToken; //Token สำหรับตอบกลับผู้ส่งแชทมา
-  if (!to) return; //หากไม่มี Token ให้ย้อนกลับหรือจบการทำงานโค๊ด
-  if (msg == 'สวัสดี') { //หาก ข้อความที่ส่งมา == สวัสดี
-    return replyText(to, 'สวัสดีค่ะ'); //ส่งข้อความกลับไปหา Token พร้อม คำพูด
-  }
-  if (msg.startsWith('!eval')) { //คำสั่งพิเศษ สำหรับ Debug bot แบบ Real-Time
-    let cmd = msg.slice(6);
-    eval(cmd.join(' ')).catch((err)=>{console.log(err)});
+  let msg = message.text;
+  let to = replyToken;
+  if (!to) return;
+  if (msg == 'สวัสดี') {
+    return replyText(to, 'สวัสดี');
   }
 }
 
@@ -122,22 +118,22 @@ function handleText(message, replyToken, source) {
       } else {
         return replyText(replyToken, 'คุณไม่สามารถใช้คำสั่งนี้ได้');
       }
-    case '!buttons':
+    case 'help':
       return client.replyMessage(
         replyToken,
         {
           type: 'template',
-          altText: 'Buttons alt text',
+          altText: 'Buttons Help',
           template: {
             type: 'buttons',
             thumbnailImageUrl: buttonsImageURL,
-            title: 'My button sample',
-            text: 'Hello, my button',
+            title: 'คลิ๊กด้านล่าง เพื่อสั่งใช้งาน',
+            text: 'ยินดี ให้บริการ',
             actions: [
-              { label: 'Go to line.me', type: 'uri', uri: 'https://line.me' },
-              { label: 'Say hello1', type: 'postback', data: 'hello こんにちは' },
-              { label: '言 hello2', type: 'postback', data: 'hello こんにちは', text: 'hello こんにちは' },
-              { label: 'Say message', type: 'message', text: 'Rice=米' },
+              { label: 'Add line', type: 'uri', uri: 'https://line.me/ti/p/~babank_75' },
+              { label: '[Help] Carousel', type: 'message', text: '!carousel' },
+              { label: '[Help] Confirm', type: 'message', text: '!confirm' },
+              { label: '[Help] Image carousel', type: 'message', text: '!image carousel' },
             ],
           },
         }
@@ -147,7 +143,7 @@ function handleText(message, replyToken, source) {
         replyToken,
         {
           type: 'template',
-          altText: 'Confirm alt text',
+          altText: 'Confirm Template',
           template: {
             type: 'confirm',
             text: 'Do it?',
@@ -163,7 +159,7 @@ function handleText(message, replyToken, source) {
         replyToken,
         {
           type: 'template',
-          altText: 'Carousel alt text',
+          altText: 'Carousel Template',
           template: {
             type: 'carousel',
             columns: [
@@ -172,7 +168,7 @@ function handleText(message, replyToken, source) {
                 title: 'hoge',
                 text: 'fuga',
                 actions: [
-                  { label: 'Go to line.me', type: 'uri', uri: 'https://line.me' },
+                  { label: 'Go to line.me', type: 'uri', uri: 'https://line.me/ti/p/~babank_75/ti/p/~babank_75' },
                   { label: 'Say hello1', type: 'postback', data: 'hello こんにちは' },
                 ],
               },
@@ -194,13 +190,13 @@ function handleText(message, replyToken, source) {
         replyToken,
         {
           type: 'template',
-          altText: 'Image carousel alt text',
+          altText: 'Image Carousel Template',
           template: {
             type: 'image_carousel',
             columns: [
               {
                 imageUrl: buttonsImageURL,
-                action: { label: 'Go to LINE', type: 'uri', uri: 'https://line.me' },
+                action: { label: 'Go to LINE', type: 'uri', uri: 'https://line.me/ti/p/~babank_75' },
               },
               {
                 imageUrl: buttonsImageURL,
@@ -228,7 +224,7 @@ function handleText(message, replyToken, source) {
         replyToken,
         {
           type: 'template',
-          altText: 'Datetime pickers alt text',
+          altText: 'Datetime pickers Template',
           template: {
             type: 'buttons',
             text: 'Select date / time !',
@@ -246,7 +242,7 @@ function handleText(message, replyToken, source) {
         {
           type: 'imagemap',
           baseUrl: `${baseURL}/static/rich`,
-          altText: 'Imagemap alt text',
+          altText: 'Imagemap Template',
           baseSize: { width: 1040, height: 1040 },
           actions: [
             { area: { x: 0, y: 0, width: 520, height: 520 }, type: 'uri', linkUri: 'https://store.line.me/family/manga/en' },
@@ -264,7 +260,7 @@ function handleText(message, replyToken, source) {
               height: 270,
             },
             externalLink: {
-              linkUri: 'https://line.me',
+              linkUri: 'https://line.me/ti/p/~babank_75',
               label: 'LINE'
             }
           },
@@ -414,7 +410,7 @@ function handleSticker(message, replyToken) {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   if (baseURL) {
-    console.log('listening on '+baseURL+'/callback');
+    console.log('listening on '+baseURL+':'+port+'/callback');
   } else {
     console.log("It seems that BASE_URL is not set.");
   }
