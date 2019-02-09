@@ -2,8 +2,8 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
 const config = {
-  channelAccessToken: 'ใส่ Token เอามาจาก Line Developer',
-  channelSecret: 'Mid ก็เอามาจาก Line Developer',
+  channelAccessToken: 'AZR5h8iAU8HouSJbyI+NsRoKfJhq7d03+yUq5V+5XXfcmjnbihdekyjESeGYPbQZTQMf60w2zWMG9mDgKCM3D/YStKY9fEExH+EbSH+IJFxdKgycerlFZaOsHrestkCQ1UmO+UgEjrJsH62giW8WjwdB04t89/1O/w1cDnyilFU=',
+  channelSecret: '4cee74bf19bb7ef8d06d28592d0dcae8',
 };
 let baseURL = 'Callback เอามาจาก Heroku';
 const client = new line.Client(config);
